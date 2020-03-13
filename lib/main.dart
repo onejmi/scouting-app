@@ -1,3 +1,4 @@
+import 'package:qrscan/qrscan.dart' as scanner;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -28,12 +29,17 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  String _url = "http://192.168.137.1:4567";
 
   void _incrementCounter() async {
-    var response = await http.get("http://192.168.137.1:4567");
+    var response = await http.get(_url);
     setState(() {
       _counter = int.parse(response.body);
     });
+  }
+
+  void _changeURL() async {
+    _url = await scanner.scan();
   }
 
   @override
@@ -53,6 +59,11 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.display1,
             ),
+            Text('$_url'),
+            IconButton(
+              icon: Icon(Icons.add_a_photo),
+              onPressed: _changeURL,
+            )
           ],
         ),
       ),
